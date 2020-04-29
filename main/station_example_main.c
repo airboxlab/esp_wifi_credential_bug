@@ -62,11 +62,12 @@ static void event_handler(void* arg, esp_event_base_t event_base,
         s_retry_num = 0;
         wifi_config_t conf = {};
         //Getting config from RAM
-        esp_wifi_get_config(ESP_IF_WIFI_STA, &conf);
+        ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
+        ESP_ERROR_CHECK(esp_wifi_get_config(ESP_IF_WIFI_STA, &conf));
         //Setting config to flash
-        esp_wifi_set_storage(WIFI_STORAGE_FLASH);
+        ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_FLASH));
         ESP_LOGI(TAG, "Setting successful config to FLASH (%s, %s)", conf.sta.ssid, conf.sta.password);
-        esp_wifi_set_config(ESP_IF_WIFI_STA, &conf);
+        ESP_ERROR_CHECK(esp_wifi_set_config(ESP_IF_WIFI_STA, &conf));
         xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
     }
 }
